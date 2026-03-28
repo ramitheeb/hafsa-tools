@@ -24,8 +24,8 @@ export function App() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <p>Loading...</p>
+      <div className="flex min-h-svh items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }

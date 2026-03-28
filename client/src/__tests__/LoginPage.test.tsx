@@ -17,22 +17,22 @@ describe('LoginPage', () => {
     render(<LoginPage isSetup={true} onSuccess={() => {}} />);
     expect(screen.getByText('Enter your password to continue')).toBeInTheDocument();
     expect(screen.getByText('Log In')).toBeInTheDocument();
-    expect(screen.queryByPlaceholderText('Confirm password')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Confirm Password')).not.toBeInTheDocument();
   });
 
   it('shows setup form on first visit', () => {
     render(<LoginPage isSetup={false} onSuccess={() => {}} />);
     expect(screen.getByText('Set up your password to get started')).toBeInTheDocument();
     expect(screen.getByText('Create Password')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Confirm password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
   });
 
   it('shows error when setup passwords do not match', async () => {
     const user = userEvent.setup();
     render(<LoginPage isSetup={false} onSuccess={() => {}} />);
 
-    await user.type(screen.getByPlaceholderText('Password'), 'pass1');
-    await user.type(screen.getByPlaceholderText('Confirm password'), 'pass2');
+    await user.type(screen.getByLabelText('Password'), 'pass1');
+    await user.type(screen.getByLabelText('Confirm Password'), 'pass2');
     await user.click(screen.getByText('Create Password'));
 
     expect(screen.getByText('Passwords do not match')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('LoginPage', () => {
     const user = userEvent.setup();
 
     render(<LoginPage isSetup={true} onSuccess={onSuccess} />);
-    await user.type(screen.getByPlaceholderText('Password'), 'mypassword');
+    await user.type(screen.getByLabelText('Password'), 'mypassword');
     await user.click(screen.getByText('Log In'));
 
     expect(api.login).toHaveBeenCalledWith('mypassword');
@@ -57,8 +57,8 @@ describe('LoginPage', () => {
     const user = userEvent.setup();
 
     render(<LoginPage isSetup={false} onSuccess={onSuccess} />);
-    await user.type(screen.getByPlaceholderText('Password'), 'newpass');
-    await user.type(screen.getByPlaceholderText('Confirm password'), 'newpass');
+    await user.type(screen.getByLabelText('Password'), 'newpass');
+    await user.type(screen.getByLabelText('Confirm Password'), 'newpass');
     await user.click(screen.getByText('Create Password'));
 
     expect(api.setup).toHaveBeenCalledWith('newpass');
@@ -70,7 +70,7 @@ describe('LoginPage', () => {
     const user = userEvent.setup();
 
     render(<LoginPage isSetup={true} onSuccess={() => {}} />);
-    await user.type(screen.getByPlaceholderText('Password'), 'wrong');
+    await user.type(screen.getByLabelText('Password'), 'wrong');
     await user.click(screen.getByText('Log In'));
 
     expect(screen.getByText('Invalid password')).toBeInTheDocument();

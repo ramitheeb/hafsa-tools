@@ -1,5 +1,15 @@
 import { useState, FormEvent } from 'react';
 import { api } from '../api';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 interface Props {
   isSetup: boolean;
@@ -39,80 +49,53 @@ export function LoginPage({ isSetup, onSuccess }: Props) {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>Hafsa Tools</h1>
-        <p style={styles.subtitle}>
-          {isFirstTime ? 'Set up your password to get started' : 'Enter your password to continue'}
-        </p>
+    <div className="flex min-h-svh items-center justify-center p-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Hafsa Tools</CardTitle>
+          <CardDescription>
+            {isFirstTime
+              ? 'Set up your password to get started'
+              : 'Enter your password to continue'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoFocus
+              />
+            </div>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoFocus
-          />
+            {isFirstTime && (
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+            )}
 
-          {isFirstTime && (
-            <input
-              type="password"
-              placeholder="Confirm password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          )}
+            {error && (
+              <p className="text-sm text-destructive-foreground">{error}</p>
+            )}
 
-          {error && <p style={styles.error}>{error}</p>}
-
-          <button type="submit" className="primary" disabled={loading} style={styles.button}>
-            {loading ? '...' : isFirstTime ? 'Create Password' : 'Log In'}
-          </button>
-        </form>
-      </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? '...' : isFirstTime ? 'Create Password' : 'Log In'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '100vh',
-  },
-  card: {
-    background: 'var(--color-surface)',
-    borderRadius: '12px',
-    padding: '2.5rem',
-    width: '100%',
-    maxWidth: '380px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 700,
-    textAlign: 'center' as const,
-    marginBottom: '0.25rem',
-  },
-  subtitle: {
-    color: 'var(--color-text-muted)',
-    textAlign: 'center' as const,
-    marginBottom: '1.5rem',
-    fontSize: '0.9rem',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '0.75rem',
-  },
-  error: {
-    color: 'var(--color-error)',
-    fontSize: '0.85rem',
-  },
-  button: {
-    width: '100%',
-    marginTop: '0.25rem',
-  },
-};
