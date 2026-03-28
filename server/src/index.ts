@@ -7,12 +7,17 @@ import { setPassword, verifyPassword, isSetup, requireAuth } from './auth';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const isProd = process.env.NODE_ENV === 'production';
 
+app.set('trust proxy', 1);
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-}));
+
+if (!isProd) {
+  app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }));
+}
 
 app.use(session({
   secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
@@ -21,7 +26,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
-    secure: false,
+    secure: isProd,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
   },
 }));
