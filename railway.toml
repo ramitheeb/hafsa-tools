@@ -1,0 +1,21 @@
+[build]
+builder = "NIXPACKS"
+
+[build.nixpacksPlan.phases.setup]
+nixPkgs = ["...", "python3"]
+
+[build.nixpacksPlan.phases.install]
+cmds = ["npm ci", "cd server && npm ci", "cd client && npm ci"]
+
+[build.nixpacksPlan.phases.build]
+cmds = ["cd client && npm run build", "cd server && npm run db:migrate"]
+
+[deploy]
+startCommand = "cd server && npm run start"
+healthcheckPath = "/api/auth/status"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[deploy.envs]
+NODE_ENV = "production"
